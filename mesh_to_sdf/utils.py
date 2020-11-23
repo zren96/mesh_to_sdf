@@ -47,9 +47,22 @@ def check_voxels(voxels):
     max_distance = max(np.max(d1), np.max(d2), np.max(d3))
     return max_distance < 2.0 / voxels.shape[0] * 3**0.5 * 1.1
 
-def sample_uniform_points_in_unit_sphere(amount):
-    unit_sphere_points = np.random.uniform(-1, 1, size=(amount * 2 + 20, 3))
-    unit_sphere_points = unit_sphere_points[np.linalg.norm(unit_sphere_points, axis=1) < 1]
+def sample_uniform_points_in_unit_sphere(amount, mesh_bounds):
+    ellipsiod_dim = mesh_bounds*1.5 # bigger than the shape
+    x,y,z = ellipsiod_dim
+    unit_sphere_points = np.random.uniform(-ellipsiod_dim, 
+                                           ellipsiod_dim, 
+                                           size=(amount * 2 + 20, 3))	
+                            # use ellipsoid bigger than the dimensions
+    # check if sample points are inside the ellipsoid
+    ellipsiod_check = unit_sphere_points[:,0]**2/x**2 + \
+                      unit_sphere_points[:,1]**2/y**2 + \
+                      unit_sphere_points[:,2]**2/z**2
+    unit_sphere_points = unit_sphere_points[ellipsiod_check < 1]
+
+    ## unit sphere, original
+    # unit_sphere_points = np.random.uniform(-1, 1, size=(amount * 2 + 20, 3)) 
+    # unit_sphere_points = unit_sphere_points[np.linalg.norm(unit_sphere_points, axis=1) < 1]
 
     points_available = unit_sphere_points.shape[0]
     if points_available < amount:
