@@ -93,9 +93,9 @@ class SurfacePointCloud:
 		if min_size > 0:
 			model_size = np.count_nonzero(sdf[-unit_sphere_sample_count:] < 0) / unit_sphere_sample_count
 			print(model_size)
-			if model_size < min_size:
-				print('bad!')
-				raise BadMeshException()
+			# if model_size < min_size:
+			# 	print('bad!')
+			# 	raise BadMeshException()
 
 		return query_points, sdf
 
